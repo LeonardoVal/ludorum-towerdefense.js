@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html><head>
+	<title>Console: ludorum-towerdefense.</title>
+	<meta charset="UTF-8"/>
+	<script src="lib/require.js"></script>
+</head><body onload="main();">
+	<script type="text/javascript">
+function main() {
+	require.config({ baseUrl: 'lib/' });
+	require(['creatartis-base', 'sermat', 'ludorum', 'ludorum-towerdefense'], function (base, Sermat, ludorum, ludorum_towerdefense) {
+		window.base = base;
+		window.Sermat = Sermat;
+		window.ludorum = ludorum;
+		window.ludorum_towerdefense = ludorum_towerdefense;
+		(function (s){ // See: <http://jsconsole.com>.
+			s.src = 'lib/jsconsole/inject.js';
+			document.body.appendChild(s);
+		})(document.createElement('script'));
+	}, function (error) {
+		throw error;
+	});
+}
+	</script>
+</body></html>

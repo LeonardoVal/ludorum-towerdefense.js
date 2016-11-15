@@ -1,0 +1,125 @@
+﻿<!doctype html>
+<html><head>
+	<meta charset=utf-8 />
+	<title>Tower Defense Demo</title>
+	<link href="Content/style.css" rel="stylesheet" />
+	<script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyAGDHC7Z7HKsqjz5sYlPZKOenE_g3VK7SA",
+	    authDomain: "tdhardy-2bfa3.firebaseapp.com",
+	    databaseURL: "https://tdhardy-2bfa3.firebaseio.com",
+	    storageBucket: "tdhardy-2bfa3.appspot.com",
+	  };
+	  firebase.initializeApp(config);
+
+		var provider = new firebase.auth.GoogleAuthProvider();
+		provider.addScope('https://www.googleapis.com/auth/plus.login');
+		// firebase.auth().signInWithRedirect(provider);
+		// firebase.auth().getRedirectResult().then(function(result) {
+		//   if (result.credential) {
+		//     // This gives you a Google Access Token. You can use it to access the Google API.
+		//     var token = result.credential.accessToken;
+		//     // ...
+		//   }
+		//   // The signed-in user info.
+		//   var user = result.user;
+		//   // user.DisplayName;
+		//   // user.Email;
+		// }).catch(function(error) {
+		//   // Handle Errors here.
+		//   var errorCode = error.code;
+		//   var errorMessage = error.message;
+		//   // The email of the user's account used.
+		//   var email = error.email;
+		//   // The firebase.auth.AuthCredential type that was used.
+		//   var credential = error.credential;
+		//   // ...
+		// });
+
+
+
+		firebase.auth().getRedirectResult().then(function(result) {
+			if (result.credential) {
+			// This gives you a Google Access Token. You can use it to access the Google API.
+			var token = result.credential.accessToken;
+			console.log("User is logged");
+			}
+			// The signed-in user info.
+			var user = result.user;
+			if (user) {
+				// User is signed in.
+				console.log(user.email);
+				window.user = user;
+				
+			} else {
+				// No user is signed in.
+				console.log("No user Logged");// No user is signed in.
+				
+				var provider = new firebase.auth.GoogleAuthProvider();
+				
+				provider.addScope('https://www.googleapis.com/auth/plus.login');
+				
+				firebase.auth().signInWithRedirect(provider);
+				
+			}
+		}).catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			// ...
+		});
+	</script>
+	<script src="Scripts/require.js"></script>
+</head>
+<body onload="main();">
+	<div id="wait"><div id="wait-message">Loading ...</div></div>
+	<div id="nextWave" style="position:absolute; padding:20px;">
+		<div id="Mario-info"></div>
+		<div id="Rope-info"></div>
+		<div id="FireWizzrobe-info"></div>
+		<div id="DarkNut-info"></div>
+		<div id="Speedy-info"></div>
+		<div id="Armos-info"></div>
+	</div>
+	<div id="frame" class="hidden">
+		<div id="info">
+			<div id="money-info" title="Money left"></div>
+			<div id="level-info" title="Current level"></div>
+			<div id="health-info" title="Health left"></div>
+			<div id="time-info">Game started ...</div>
+			<div id="sound-info" class="on" title="Sound status"></div>
+		</div>
+		<canvas id="game" width=450 height=450>
+			<p><b>Your browser does not support the canvas element.</b></p>
+			<p>This indicates that you are really stuck in the past (sorry!). Please get a new browser.</p>
+		</canvas>
+		<div id="towers"></div>
+		<div id="buttons">
+			<button id="startWave">Start Wave</button>
+		</div>
+		
+	</div>
+
+	<script type="text/javascript">
+	function main() {
+		require.config({ baseUrl: 'Scripts/' });
+		require(['creatartis-base', 'ludorum-towerdefense'], function (base, ludorum_towerdefense) {
+			window.base = base;
+			window.ludorum_towerdefense = ludorum_towerdefense;
+			(function (s){ // Start the app.
+				s.src = 'app.js';
+				document.body.appendChild(s);
+			})(document.createElement('script'));
+		}, function (error) {
+			throw error;
+		});
+	}
+	</script>
+</body>
+</html>
