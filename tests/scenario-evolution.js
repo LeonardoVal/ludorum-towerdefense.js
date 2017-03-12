@@ -141,7 +141,7 @@ var ScenarioProblem = base.declare(inveniemus.Problem, {
 			maxCreeps: 5,
 			maxTime: 5000,
 			matchCount: 3,
-			playerParams: { size: 10, steps: 5 }
+			playerParams: { size: 15, steps: 5 }
 		}),
 		mh = new inveniemus.metaheuristics.GeneticAlgorithm({ 
 			problem: problem, expansionRate: 0.75, size: 20, steps: 3 

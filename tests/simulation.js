@@ -43,21 +43,22 @@ var jobFunction = function (ludorum_towerdefense, scenario, size, steps) {
 // ## Main #########################################################################################
 	
 var SCENARIOS = ['Test01', 'Test02', 'Test03'],
-	MATCH_COUNT = 200,
-	AI_SIZE = 10,
+	MATCH_COUNT = 50,
+	AI_SIZES = [10, 15, 20],
 	AI_STEPS = 5,
 	STATS = new base.Statistics();
 	
 base.Future.all(
-	base.Iterable.range(MATCH_COUNT).product(SCENARIOS).mapApply(function (i, scenario) {
+	base.Iterable.range(MATCH_COUNT).product(SCENARIOS, AI_SIZES).mapApply(function (i, scenario, aiSize) {
 		return server.schedule({
-			info: scenario +' #'+ i,
+			info: scenario +' with AI'+ aiSize +' #'+ i,
 			fun: jobFunction,
 			imports: ['ludorum-towerdefense'],
-			args: [scenario, AI_SIZE, AI_STEPS]
+			args: [scenario, aiSize, AI_STEPS]
 		}).then(function (data) {
 			var reached = data.reached;
 			STATS.add({ key: 'reached', scenario: data.scenario }, reached);
+			STATS.add({ key: 'reached'+ reached, scenario: data.scenario });
 			STATS.add({ key: 'result', scenario: data.scenario }, data.result);
 			if (reached < 11) {
 				STATS.add({ key: 'defeats', scenario: data.scenario, level: reached}, data['money@'+ reached]);
@@ -68,10 +69,11 @@ base.Future.all(
 				STATS.add({ key: 'money', scenario: data.scenario, level: i }, data['money@'+ i]);
 				STATS.add({ key: 'hp', scenario: data.scenario, level: i }, data['hp@'+ i]);
 			}
+			server.logger.info(data.scenario +','+ aiSize +','+ reached +','+ data['hp@'+ reached]);
 		});
 	})
 ).then(function () {
-	server.logger.info("Results:\n"+ STATS);
+	server.logger.info("Statistics:\n"+ STATS);
 	server.logger.info("Finished. Stopping server.");
 	//setTimeout(process.exit, 10);
 }, function (error) {
