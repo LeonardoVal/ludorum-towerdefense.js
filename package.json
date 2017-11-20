@@ -28,7 +28,7 @@
 		"sermat": "~0.0.9"
 	},
 	"devDependencies": {
-		"capataz": "~0.1.5",
+		"capataz": "0.1.7-beta",
 		"source-map-support": "~0.4.0",
 		"requirejs": "~2.2.0",
 		"grunt": "~0.4.4",

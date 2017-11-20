@@ -1,4 +1,4 @@
-/**	
+/**
 */
 "use strict";
 require('source-map-support').install();
@@ -9,9 +9,9 @@ var path = require('path'),
 	base = require('creatartis-base'),
 	capataz = require('capataz'),
 	//ludorum_towerdefense = require('./lib/ludorum-towerdefense'),
-	
+
 	server = capataz.Capataz.run({
-		port: 80,
+		port: 8088,
 		workerCount: 4,
 		desiredEvaluationTime: 30000, // 30 seconds.
 		customFiles: path.dirname(module.filename) + '/lib',
@@ -19,7 +19,7 @@ var path = require('path'),
 		maxDelay: 10000,
 		maxRetries: 1000
 	});
-	
+
 // ## Jobs #########################################################################################
 
 var jobFunction = function (ludorum_towerdefense, scenario, size, steps) {
@@ -41,13 +41,13 @@ var jobFunction = function (ludorum_towerdefense, scenario, size, steps) {
 }
 
 // ## Main #########################################################################################
-	
+
 var SCENARIOS = ['Test01', 'Test02', 'Test03'],
 	MATCH_COUNT = 50,
 	AI_SIZES = [10, 15, 20],
 	AI_STEPS = 5,
 	STATS = new base.Statistics();
-	
+
 base.Future.all(
 	base.Iterable.range(MATCH_COUNT).product(SCENARIOS, AI_SIZES).mapApply(function (i, scenario, aiSize) {
 		return server.schedule({
