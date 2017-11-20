@@ -25,7 +25,7 @@
 		"ludorum": "~0.2.0",
 		"inveniemus": "0.1.5",
 		"creatartis-base": "~0.1.7",
-		"sermat": "~0.0.8"
+		"sermat": "~0.0.9"
 	},
 	"devDependencies": {
 		"capataz": "~0.1.5",
