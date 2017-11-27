@@ -1,44 +1,45 @@
 {
-	"name": "ludorum-towerdefense",
-	"description": "Implementation of tower defense games for Ludorum.",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/LeonardoVal/ludorum-towerdefense.git"
-	},
-	"keywords": [
-		"tower defense",
-		"game ai"
-	],
-	"version": "0.0.1",
-	"author": {
-		"name": "Brain Hardy",
-		"email": "hardyr.93@gmail.com"
-	},
-	"contributors": [
-		{
-			"name": "Leonardo Val",
-			"email": "leonardo.val@creatartis.com"
-		}
-	],
-	"license": "MIT",
-	"dependencies": {
-		"ludorum": "~0.2.0",
-		"inveniemus": "0.1.5",
-		"creatartis-base": "~0.1.7",
-		"sermat": "~0.0.8"
-	},
-	"devDependencies": {
-		"capataz": "~0.1.5",
-		"source-map-support": "~0.4.0",
-		"requirejs": "~2.2.0",
-		"grunt": "~0.4.4",
-		"grunt-contrib-concat": "~1.0.0",
-		"grunt-contrib-copy": "~1.0.0",
-		"grunt-contrib-jshint": "~1.0.0",
-		"grunt-contrib-uglify": "~1.0.0",
-		"grunt-docker": "~0.0.11"
-	},
-	"scripts": {
-		"post install": "npm dedupe"
-	}
+  "name": "ludorum-towerdefense",
+  "description": "Implementation of tower defense games for Ludorum.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LeonardoVal/ludorum-towerdefense.git"
+  },
+  "keywords": [
+    "tower defense",
+    "game ai"
+  ],
+  "version": "0.0.1",
+  "author": {
+    "name": "Brain Hardy",
+    "email": "hardyr.93@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "Leonardo Val",
+      "email": "leonardo.val@creatartis.com"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ludorum": "~0.2.0",
+    "inveniemus": "0.1.5",
+    "creatartis-base": "~0.1.7",
+    "sermat": "~0.0.8"
+  },
+  "devDependencies": {
+    "capataz": "~0.1.5",
+    "grunt": "~0.4.4",
+    "grunt-contrib-concat": "~1.0.0",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-copy": "~1.0.0",
+    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-contrib-uglify": "~1.0.0",
+    "grunt-docker": "~0.0.11",
+    "requirejs": "~2.2.0",
+    "source-map-support": "~0.4.0"
+  },
+  "scripts": {
+    "post install": "npm dedupe"
+  }
 }
