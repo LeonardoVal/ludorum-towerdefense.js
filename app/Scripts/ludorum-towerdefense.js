@@ -1,11 +1,12 @@
-(function (global, init) { "use strict";
-	if (typeof define === 'function' && define.amd) {
-		define(['creatartis-base', 'inveniemus'], init); // AMD module.
-	} else if (typeof exports === 'object' && module.exports) {
-		module.exports = init(require('creatartis-base'), require('inveniemus')); // CommonJS module.
-	} else {
-		global.ludorum_towerdefense = init(global.base, global.inveniemus); // Browser.
-	}
+(function (global, init) {
+  "use strict";
+  if (typeof define === "function" && define.amd) {
+    define(["creatartis-base", "inveniemus"], init); // AMD module.
+  } else if (typeof exports === "object" && module.exports) {
+    module.exports = init(require("creatartis-base"), require("inveniemus")); // CommonJS module.
+  } else {
+    global.ludorum_towerdefense = init(global.base, global.inveniemus); // Browser.
+  }
 })(this,/** Module wrapper and layout.
 */
 function __init__(base, inveniemus) { "use strict";

@@ -144,7 +144,9 @@ module.exports = function(grunt) {
       server: {
         options: {
           port: 9000,
-          base: "./app/public/"
+          base: "./app/public/",
+          keepalive: true,
+          open: 'http://localhost:9000/index.html'
         }
       }
     }
@@ -165,5 +167,6 @@ module.exports = function(grunt) {
   ]);
   grunt.registerTask("test", ["compile", "copy:test", "copy:app"]); //TODO Add specs.
   grunt.registerTask("build", ["test", "docker:document"]);
+  grunt.registerTask("play", ["test", "connect:server"]);
   grunt.registerTask("default", ["test"]);
 };
