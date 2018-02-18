@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="/css/styles.css"/>
+	<title>Tower defense experiment</title>
+
+	<script defer src="/__/firebase/4.10.0/firebase-app.js"></script>
+	<script defer src="/__/firebase/4.10.0/firebase-auth.js"></script>
+	<script defer src="/__/firebase/4.10.0/firebase-database.js"></script>
+	<script defer src="/__/firebase/init.js"></script>
+	<script src="/js/require.js"></script>
+</head><body>
+	<div id="wait">
+		<div id="wait-message">Loading ...</div>
+	</div>
+	<div id="nextWave" style="position:absolute; padding:20px;">
+		<div id="Mario-info"></div>
+		<div id="Rope-info"></div>
+		<div id="FireWizzrobe-info"></div>
+		<div id="DarkNut-info"></div>
+		<div id="Speedy-info"></div>
+		<div id="Armos-info"></div>
+	</div>
+	<div id="frame" class="hidden">
+		<div id="info">
+			<div id="money-info" title="Money left"></div>
+			<div id="level-info" title="Current level"></div>
+			<div id="health-info" title="Health left"></div>
+			<div id="time-info">Game started ...</div>
+			<div id="sound-info" class="on" title="Sound status"></div>
+		</div>
+		<canvas id="game" width=450 height=450>
+			<p>Your browser does not support the canvas element. This indicates that you are really stuck in the past (sorry!). Please get a new browser.</p>
+		</canvas>
+		<div id="towers"></div>
+		<div id="buttons">
+			<button id="startWave">Start Wave</button>
+		</div>
+	</div>
+
+	<script src="/js/app.js"></script>
+</body></html>

@@ -1,0 +1,236 @@
+body {
+	font: 12px Arial;
+	overflow: hidden;
+	background: rgb(200,200,200);
+}
+
+button {
+	font: 16px Arial;
+	font-weight: bold;
+	width: 200px;
+	height: 40px;
+	border-radius: 10px;
+	border: 1px solid #ccc;
+	background: #fff;
+	margin: 20px;
+	box-shadow: 0 2px 3px #000;
+	cursor: pointer;
+}
+
+button:disabled {
+	cursor: none;
+	background: #ddd;
+}
+
+button:hover:not(:disabled) {
+	background: #ff6;
+}
+
+#frame {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	max-width: 1024px;
+	width: 100%;
+	height: 660px;
+	margin-left: 16%;
+	margin-top: 3%;
+	background: rgba(255, 255, 255, 0.5);
+	padding: 8px;
+	border: 1px solid #ccc;
+}
+
+#wait {
+	font-size: 1.5em;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: #ccc url(/assets/icons/loading.gif) no-repeat center center;
+	-o-transition: all 1s ease;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+}
+
+#wait-message {
+	position: absolute;
+	top: 50%;
+	padding-top: 20px;
+	width: 100%;
+	left: 0;
+	text-align: center;
+	font-weight: bold;
+}
+
+.hidden {
+	display: none !important;
+    visibility: hidden;
+}
+
+#game {
+	margin: 8px auto;
+	display: block;
+}
+
+#info {
+	height: 24px;
+	position: relative;
+}
+
+#info > div {
+	position: absolute;
+	height: 19px;
+	padding-top: 5px;
+	top: 0;
+}
+
+#buttons {
+	text-align: center;
+}
+
+#time-info {
+	width: 100%;
+	text-align: center;
+	left: 0;
+}
+
+#money-info {
+	background: url(/assets/icons/money.png) no-repeat left center;
+	padding-left: 28px;
+	left: 0;
+}
+
+#level-info {
+	background: url(/assets/icons/rating.png) no-repeat left center;
+	padding-left: 28px;
+	left: 200px;
+}
+
+#health-info {
+	background: url(/assets/icons/health.png) no-repeat left center;
+	padding-left: 28px;
+	left: 100px;
+}
+
+#nextWave {
+	background: rgb(200,200,200) no-repeat left center;
+	padding-left: 28px;
+}
+
+#sound-info {
+	background: no-repeat right center;
+	padding-right: 28px;
+	right: 0;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+}
+
+#sound-info.on {
+	background-image: url(/assets/icons/sound.png);
+}
+
+#sound-info.off {
+	background-image: url(/assets/icons/nosound.png);
+}
+
+#towers {
+	background: #fefefe;
+}
+
+#towers:after {
+	clear: both;
+	height: 0;
+	float: none;
+	content: '';
+}
+
+#towers > div {
+	width: 12%;
+	float: left;
+	height: 60px;
+	cursor: pointer;
+	margin: 0.1%;
+	background: #ddd;
+	border: 1px solid #aaa;
+}
+
+#towers > div:not(.selected-tower):hover {
+	background: #ccc;
+}
+
+#towers > div.selected-tower {
+	background: #ee3;
+	cursor: default;
+}
+
+.preview {
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+}
+
+div.preview-image {
+	display: inline-block;
+}
+
+.title {
+	font-weight: bold;
+	padding-top: 5px;
+	height: 20px;
+	text-align: center;
+}
+
+.info {
+	display: none;
+	position: relative;
+	background: white;
+	padding: 5px;
+	border: 1px solid #ccc;
+}
+
+#towers > div:hover > .info {
+	display: block;
+}
+
+.cost, .speed, .damage, .range, .rating {
+	height: 28px;
+	line-height: 28px;
+	padding-left: 28px;
+	font-size: 0.9em;
+	float: left;
+	width: 50%;
+	box-sizing: border-box;
+}
+
+.description {
+	font-size: 0.9em;
+	padding: 3px 0 7px 0;
+}
+
+.cost {
+	background: url(/assets/icons/money.png) no-repeat left center;
+	float: none;
+	clear: both;
+}
+
+.speed {
+	background: url(/assets/icons/speed.png) no-repeat left center;
+}
+
+.damage {
+	background: url(/assets/icons/damage.png) no-repeat left center;
+}
+
+.range {
+	background: url(/assets/icons/range.png) no-repeat left center;
+}
+
+.rating {
+	background: url(/assets/icons/rating.png) no-repeat left center;
+}
