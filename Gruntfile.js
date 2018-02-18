@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 						dest: FB_APP_PATH +'public/js/inveniemus.js' },
 					{ src: 'node_modules/ludorum/build/ludorum.min.js', nonull: true,
 						dest: FB_APP_PATH +'public/js/ludorum.js' },
-					{ src: 'build/ludorum-towerdefense.min.js', nonull: true,
+					{ src: 'build/ludorum-towerdefense.js', nonull: true,
 						dest: FB_APP_PATH +'public/js/ludorum-towerdefense.js' },
 				]
 			}
@@ -28,7 +28,7 @@ module.exports = function (grunt) {
 
 	require('creatartis-grunt').config(grunt, {
 		sourceNames: ["__prologue__",
-			"manifest", "oop", "path", "resources", "video", "sound", "main", "logic",
+			"manifest", "oop", "path", "video", "sound", "main", "logic",
 			"units", "shots", "towers", "towerdefense", "ai-players", "scenarios",
 			"__epilogue__"],
 		deps: [

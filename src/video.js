@@ -82,7 +82,8 @@ var CanvasView = exports.CanvasView = View.extend({
 				window.setTimeout(callback, 1000 / constants.ticks);
 			}
 		).bind(window);
-	},	
+	},
+
 	start: function() {
 		var me = this;
 		me.running = true;
@@ -93,6 +94,7 @@ var CanvasView = exports.CanvasView = View.extend({
 		};
 		me.nextAnimationFrame(render);
 	},
+
 	drawVisual: function(element) {
 		var ctx = this.context;
 		var visual = element.visual;
@@ -108,6 +110,7 @@ var CanvasView = exports.CanvasView = View.extend({
 		dy += (ho - h) * 0.5;
 		ctx.drawImage(visual.image, sx, sy, visual.width, visual.height, dx, dy, w, h);
 	},
+
 	drawBackground: function() {
 		var ctx = this.context;
 		ctx.clearRect(0, 0, this.width, this.height);
@@ -115,6 +118,7 @@ var CanvasView = exports.CanvasView = View.extend({
 		if (this.background)
 			ctx.drawImage(this.background, 0, 0, this.width, this.height);
 	},
+
 	drawHome: function() {
 		var ctx = this.context;
 		var width = this.width / this.mazeSize.width;
@@ -125,6 +129,7 @@ var CanvasView = exports.CanvasView = View.extend({
 		ctx.fillStyle = 'rgba(0, 255, 0, 0.7)';
 		ctx.fillRect(x, y, width, height);
 	},
+
 	drawSpawn: function() {
 		var ctx = this.context;
 		var width = this.width / this.mazeSize.width;
@@ -135,6 +140,7 @@ var CanvasView = exports.CanvasView = View.extend({
 		ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
 		ctx.fillRect(x, y, width, height);
 	},
+
 	drawGrid: function() {
 		var ctx = this.context;
 		ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
@@ -158,6 +164,7 @@ var CanvasView = exports.CanvasView = View.extend({
 			ctx.closePath();
 		}
 	},
+
 	drawPath: function() {
 		var ctx = this.context;
 		var width = this.width / this.mazeSize.width;
@@ -184,8 +191,6 @@ var CanvasView = exports.CanvasView = View.extend({
 		}
 	},
 
-	
-
 	playSound: function(soundName, loop, volume) {
 		var audio = this.sounds[soundName];
 		var sound = new Sound(audio, loop);
@@ -194,11 +199,77 @@ var CanvasView = exports.CanvasView = View.extend({
 		sound.play();
 	},
 
-	loadResources: function(resources, completed, progress) {
-		var loader = new Loader(completed, progress);
-		loader.set('Images', ImageLoader, this.images, resources.images);
-		loader.set('Sounds', SoundLoader, this.sounds, resources.sounds);
-		loader.start();
-	}
+	loadImages: function loadImages(resources, progress) {
+		var loadedCount = 0,
+			totalCount = Object.keys(resources).length;
+		return Promise.all(base.iterable(resources).mapApply(function (id, path) {
+			return new Promise(function (resolve, reject) {
+				var img = new Image();
+				img.addEventListener('error', function () {
+					reject(new Error('Loading image '+ id +' ('+ path +') failed!'));
+				}, false);
+				img.addEventListener('load', function () {
+					loadedCount++;
+					if (progress) {
+						progress({ 
+							recent: id,
+							total: totalCount,
+							progress: loadedCount / totalCount
+						});
+					}
+					resolve([id, img]);
+				}, false);
+				img.src = path;
+			});
+		}).toArray()).then(function (imgs) {
+			return base.iterable(imgs).toObject();
+		});
+	},
 
+	loadSounds: function loadSounds(resources, progress) {
+		var loadedCount = 0,
+			totalCount = Object.keys(resources).length;
+		return Promise.all(base.iterable(resources).mapApply(function (id, path) {
+			return new Promise(function (resolve, reject) {
+				var sound = new Audio();
+				sound.addEventListener('error', function() {
+					reject(new Error('Loading sound '+ id +' ('+ path +') failed!'));
+				}, false);
+				sound.addEventListener('loadedmetadata', function() {
+					loadedCount++;
+					if (progress) {
+						progress({ 
+							recent: id,
+							total: totalCount,
+							progress: loadedCount / totalCount
+						});
+					}
+					resolve([id, sound]);
+				}, false);
+				
+				if (sound.canPlayType('audio/ogg').replace(/^no$/, '') && path.ogg) {
+					sound.src = path.ogg;
+				} else if (sound.canPlayType('audio/mpeg').replace(/^no$/, '') && path.mp3) {
+					sound.src = path.mp3;
+				} else {
+					reject(new Error('Browser does not support the available audio types!'));
+				}
+			});
+		}).toArray()).then(function (imgs) {
+			return base.iterable(imgs).toObject();
+		});
+	},
+
+	loadResources: function(images, sounds, progress) {
+		var view = this;
+		console.log("Loading resources...");//FIXME
+		return view.loadImages(images, progress).then(function (loadedImages) {
+			console.log("Loaded images...");//FIXME
+			view.images = loadedImages;
+			return view.loadSounds(sounds, progress).then(function (loadedSounds) {
+				console.log("Loaded sounds.");//FIXME
+				view.sounds = loadedSounds;
+			});
+		});
+	}
 });
