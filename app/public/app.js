@@ -1,4 +1,4 @@
-(function() {
+(function () {
   "use strict";
 
   var constants = ludorum_towerdefense.constants,
@@ -171,17 +171,17 @@
   var nivelActual = 1;
 
   var towerType = undefined;
-  var getMousePosition = function(evt) {
+  var getMousePosition = function (evt) {
     var rect = canvas.getBoundingClientRect();
     return {
       x: evt.clientX - rect.left,
       y: evt.clientY - rect.top
     };
   };
-  var buildPhase = function() {
+  var buildPhase = function () {
     var time = 10;
-    var f = function() {
-      setTimeout(function() {
+    var f = function () {
+      setTimeout(function () {
         time--;
         timeInfo.textContent = time + " seconds left";
 
@@ -192,11 +192,11 @@
 
     f();
   };
-  var addHandlers = function() {
-    logic.addEventListener(events.waveFinished, function() {
+  var addHandlers = function () {
+    logic.addEventListener(events.waveFinished, function () {
       timeInfo.textContent = "Ya salieron todas!";
     });
-    logic.addEventListener(events.waveDefeated, function(player) {
+    logic.addEventListener(events.waveDefeated, function (player) {
       EndWave(stagePrompt, nivelActual, player);
       if (nivelActual == 10) {
         window.alert("¡FELICITACIONES! ¡GANASTE!");
@@ -209,28 +209,28 @@
       timeInfo.textContent = "Preparate para el nivel " + nivelActual;
       startWaveButton.disabled = false;
     });
-    logic.addEventListener(events.playerDefeated, function(player) {
+    logic.addEventListener(events.playerDefeated, function (player) {
       window.alert("Perdiste");
       EndGame(stagePrompt, nivelActual, player.hitpoints);
       timeInfo.textContent = "Game over ...";
     });
-    logic.addEventListener(events.waveCreated, function(wave) {
+    logic.addEventListener(events.waveCreated, function (wave) {
       timeInfo.textContent = "Faltan salir" + wave.units.length + " unidades";
       startWaveButton.disabled = true;
     });
-    logic.addEventListener(events.unitSpawned, function(remaining) {
+    logic.addEventListener(events.unitSpawned, function (remaining) {
       timeInfo.textContent = remaining + " unidades";
     });
-    logic.addEventListener(events.moneyChanged, function(player) {
+    logic.addEventListener(events.moneyChanged, function (player) {
       moneyInfo.textContent = player.money;
     });
-    logic.addEventListener(events.healthChanged, function(player) {
+    logic.addEventListener(events.healthChanged, function (player) {
       healthInfo.textContent = player.hitpoints;
     });
-    startWaveButton.addEventListener(events.click, function() {
+    startWaveButton.addEventListener(events.click, function () {
       logic.beginWave();
     });
-    soundInfo.addEventListener(events.click, function() {
+    soundInfo.addEventListener(events.click, function () {
       var on = "on";
       var off = "off";
       var status = this.classList.contains("on");
@@ -238,7 +238,7 @@
       this.classList.add(status ? off : on);
       Sound.setVolume(status ? 0 : 1);
     });
-    canvas.addEventListener(events.click, function(evt) {
+    canvas.addEventListener(events.click, function (evt) {
       var mousePos = getMousePosition(evt);
       var pos = logic.transformCoordinates(mousePos.x, mousePos.y);
       evt.preventDefault();
@@ -246,20 +246,20 @@
       if (towerType) logic.buildTower(pos, towerType);
       else logic.destroyTower(pos);
     });
-    canvas.addEventListener(events.contextmenu, function(evt) {
+    canvas.addEventListener(events.contextmenu, function (evt) {
       var mousePos = getMousePosition(evt);
       var pos = logic.transformCoordinates(mousePos.x, mousePos.y);
       evt.preventDefault();
       logic.destroyTower(pos);
     });
-    canvas.addEventListener(events.mouseover, function(evt) {
+    canvas.addEventListener(events.mouseover, function (evt) {
       view.showGrid = true;
     });
-    canvas.addEventListener(events.mouseout, function(evt) {
+    canvas.addEventListener(events.mouseout, function (evt) {
       view.showGrid = false;
     });
   };
-  var addTower = function(tower) {
+  var addTower = function (tower) {
     levelInfo.textContent = nivelActual;
     var img = view.images[tower.sprite];
 
@@ -292,21 +292,21 @@
       "</div></div>"
     ].join("");
     towerButtons.push(div);
-    div.addEventListener(events.click, function() {
+    div.addEventListener(events.click, function () {
       towerType = tower;
 
-      for (var i = towerButtons.length; i--; )
+      for (var i = towerButtons.length; i--;)
         towerButtons[i].classList.remove("selected-tower");
 
       this.classList.add("selected-tower");
     });
     towerPanel.appendChild(div);
   };
-  var addTowers = function() {
+  var addTowers = function () {
     addUnitInfo(1);
     for (var key in types.towers) addTower(types.towers[key]);
   };
-  var addUnitInfo = function(level) {
+  var addUnitInfo = function (level) {
     if (level === 0) {
       level = 0;
     } else {
@@ -406,13 +406,13 @@
       nextWave.appendChild(divA);
     }
   };
-  var startMusic = function() {
+  var startMusic = function () {
     view.playSound("burn_them_down", true, 0.1);
     /*var sound = new Sound(sounds['burn_them_down'], true);
 		sound.setVolume(0.01);
 		sound.play();*/
   };
-  var completed = function(e) {
+  var completed = function (e) {
     addTowers();
     addHandlers();
     view.background = view.images["background"];
@@ -422,7 +422,7 @@
     startMusic();
     logic.start();
   };
-  var progress = function(e) {
+  var progress = function (e) {
     document.querySelector("#wait-message").textContent =
       "Loading (" + e.name + ", " + ~~(e.progress * 100) + "%)";
   };
@@ -658,29 +658,6 @@
           { unit: "DarkNut", time: 3700 },
           { unit: "DarkNut", time: 4500 },
           { unit: "FireWizzrobe", time: 6000 }
-        ]),
-
-        new Wave(logic, 50, [
-          { unit: "Armos", time: 1 },
-          { unit: "Rope", time: 1000 },
-          { unit: "Rope", time: 1400 },
-          { unit: "Armos", time: 3000 },
-          { unit: "FireWizzrobe", time: 4800 },
-          { unit: "FireWizzrobe", time: 5100 },
-          { unit: "Armos", time: 6000 },
-          { unit: "DarkNut", time: 7100 },
-          { unit: "DarkNut", time: 7800 },
-          { unit: "Armos", time: 8500 },
-          { unit: "Armos", time: 10000 }
-        ]),
-
-        new Wave(logic, 25, [
-          { unit: "Armos", time: 1 },
-          { unit: "Armos", time: 1000 },
-          { unit: "Armos", time: 2000 },
-          { unit: "Armos", time: 3000 },
-          { unit: "Armos", time: 4000 },
-          { unit: "Armos", time: 5000 }
         ])
       ])
     );
@@ -775,30 +752,6 @@
             { unit: "FireWizzrobe", time: 5400 },
             { unit: "FireWizzrobe", time: 6000 },
             { unit: "Armos", time: 8000 }
-          ]),
-          new Wave(logic, 30, [
-            { unit: "Armos", time: 1 },
-            { unit: "Rope", time: 1000 },
-            { unit: "Rope", time: 1300 },
-            { unit: "Rope", time: 1400 },
-            { unit: "Armos", time: 3000 },
-            { unit: "FireWizzrobe", time: 3100 },
-            { unit: "FireWizzrobe", time: 3300 },
-            { unit: "FireWizzrobe", time: 3400 },
-            { unit: "Armos", time: 5000 },
-            { unit: "DarkNut", time: 5100 },
-            { unit: "DarkNut", time: 5300 },
-            { unit: "DarkNut", time: 5400 },
-            { unit: "Armos", time: 6500 },
-            { unit: "Armos", time: 7000 }
-          ]),
-          new Wave(logic, 25, [
-            { unit: "Armos", time: 1 },
-            { unit: "Armos", time: 1000 },
-            { unit: "Armos", time: 2000 },
-            { unit: "Armos", time: 3000 },
-            { unit: "Armos", time: 4000 },
-            { unit: "Armos", time: 5000 }
           ])
         ])
       );
@@ -891,30 +844,6 @@
               { unit: "FireWizzrobe", time: 5400 },
               { unit: "FireWizzrobe", time: 6000 },
               { unit: "Armos", time: 8000 }
-            ]),
-            new Wave(logic, 30, [
-              { unit: "Armos", time: 1 },
-              { unit: "Rope", time: 1000 },
-              { unit: "Rope", time: 1300 },
-              { unit: "Rope", time: 1400 },
-              { unit: "Armos", time: 3000 },
-              { unit: "FireWizzrobe", time: 3100 },
-              { unit: "FireWizzrobe", time: 3300 },
-              { unit: "FireWizzrobe", time: 3400 },
-              { unit: "Armos", time: 5000 },
-              { unit: "DarkNut", time: 5100 },
-              { unit: "DarkNut", time: 5300 },
-              { unit: "DarkNut", time: 5400 },
-              { unit: "Armos", time: 6500 },
-              { unit: "Armos", time: 7000 }
-            ]),
-            new Wave(logic, 25, [
-              { unit: "Armos", time: 1 },
-              { unit: "Armos", time: 1000 },
-              { unit: "Armos", time: 2000 },
-              { unit: "Armos", time: 3000 },
-              { unit: "Armos", time: 4000 },
-              { unit: "Armos", time: 5000 }
             ])
           ])
         );
@@ -1031,42 +960,7 @@
       }
     }
   }
-
-  /*logic.setWaves(new WaveList([
-		new Wave(logic, 8, [{unit: "Mario", time:1}, {unit: "Mario", time:700}, {unit: "Rope", time:1800}, {unit: "Rope", time:2800}, {unit: "DarkNut", time:4000}]),
-		
-		new Wave(logic, 8, [{unit: "Mario", time:1}, {unit: "Mario", time:350},
-							 {unit: "Mario", time:700}, {unit: "Rope", time:1800},
-							 {unit: "Rope", time:2300}, {unit: "Rope", time:2800},
-							 {unit: "FireWizzrobe", time:3800}, {unit: "DarkNut", time:5000}]),
-		
-		new Wave(logic, 9, [{unit: "Mario", time:1}, {unit: "Rope", time:350}, {unit: "Rope",time:600},
-							 {unit: "Rope", time:800}, {unit: "Rope", time:1000}, {unit: "FireWizzrobe", time:1500}]),
-		
-		new Wave(logic, 15, [{unit: "FireWizzrobe", time:1}, {unit: "Rope", time:500}, {unit: "Rope", time:550}, {unit: "Rope", time:600},
-							 {unit: "Rope", time:650}, {unit: "Rope", time:700}, {unit: "FireWizzrobe", time:1600},
-							 {unit: "FireWizzrobe", time:4000}, {unit: "FireWizzrobe", time:4200}]),
-		
-		new Wave(logic, 20, [{unit: "DarkNut", time:1}, {unit: "FireWizzrobe", time:500}, {unit: "FireWizzrobe", time:1000}, {unit: "DarkNut", time:1200},
-							 {unit: "FireWizzrobe", time:1600}, {unit: "DarkNut", time:2500}, {unit: "DarkNut", time:3000},
-							 {unit: "FireWizzrobe", time:4000}, {unit: "DarkNut", time:4200}]),
-		
-		new Wave(logic, 20, [{unit: "DarkNut", time:1}, {unit: "FireWizzrobe", time:250}, {unit: "FireWizzrobe", time:600}, {unit: "DarkNut", time:1000},
-							 {unit: "Rope", time:2200}, {unit: "Rope", time:2300}, {unit: "Rope", time:2400},
-							 {unit: "Rope", time:2500}, {unit: "Rope", time:2600}, {unit: "FireWizzrobe", time:4000},
-							 {unit: "DarkNut", time:4200}, {unit: "FireWizzrobe", time:4400}, {unit: "Armos", time:6000}]),
-		
-		new Wave(logic, 25, [{unit: "DarkNut", time:1}, {unit: "DarkNut", time:250}, {unit: "DarkNut", time:600}, {unit: "DarkNut", time:1000},
-							 {unit: "FireWizzrobe", time:2200}, {unit: "FireWizzrobe", time:2300}, {unit: "Rope", time:2400},
-							 {unit: "Rope", time:2500}, {unit: "FireWizzrobe", time:2600}, {unit: "Armos", time:4000},
-							 {unit: "DarkNut", time:5000}, {unit: "FireWizzrobe", time:5400}, {unit: "FireWizzrobe", time:6000}, {unit: "Armos", time:8000}]),
-
-		new Wave(logic, 30, [{unit: "Armos", time:1}, {unit: "Rope", time:1000}, {unit: "Rope", time:1300}, {unit: "Rope", time:1400},
-							 {unit: "Armos", time:3000}, {unit: "FireWizzrobe", time:3100}, {unit: "FireWizzrobe", time:3300},
-							 {unit: "FireWizzrobe", time:3400}, {unit: "Armos", time:5000}, {unit: "DarkNut", time:5100},
-							 {unit: "DarkNut", time:5300}, {unit: "DarkNut", time:5400}, {unit: "Armos", time:6500}, {unit: "Armos", time:7000}]),
-
-		]));*/
+ 
   view.loadResources(resources, completed, progress);
 })();
 
