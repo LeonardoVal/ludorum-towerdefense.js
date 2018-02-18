@@ -1,6 +1,6 @@
 /** Module wrapper and layout.
 */
-function __init__(base, inveniemus) { "use strict";
+function __init__(base, Sermat, inveniemus) { "use strict";
 /** Import synonyms */
 	var declare = base.declare;
 	
