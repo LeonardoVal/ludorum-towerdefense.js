@@ -1,15 +1,14 @@
-(function (global, init) {
-  "use strict";
-  if (typeof define === "function" && define.amd) {
-    define(["creatartis-base", "inveniemus"], init); // AMD module.
-  } else if (typeof exports === "object" && module.exports) {
-    module.exports = init(require("creatartis-base"), require("inveniemus")); // CommonJS module.
-  } else {
-    global.ludorum_towerdefense = init(global.base, global.inveniemus); // Browser.
-  }
-})(this,/** Module wrapper and layout.
+(function (init) { "use strict";
+			if (typeof define === 'function' && define.amd) {
+				define(["creatartis-base","sermat","inveniemus"], init); // AMD module.
+			} else if (typeof exports === 'object' && module.exports) {
+				module.exports = init(require("creatartis-base"),require("sermat"),require("inveniemus")); // CommonJS module.
+			} else {
+				this["ludorum-towerdefense"] = init(this.base,this.Sermat,this.inveniemus); // Browser.
+			}
+		}).call(this,/** Module wrapper and layout.
 */
-function __init__(base, inveniemus) { "use strict";
+function __init__(base, Sermat, inveniemus) { "use strict";
 /** Import synonyms */
 	var declare = base.declare;
 	
