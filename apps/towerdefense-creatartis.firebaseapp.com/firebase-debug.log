@@ -1,0 +1,32 @@
+[debug] [2018-02-18T05:40:30.323Z] ----------------------------------------------------------------------
+[debug] [2018-02-18T05:40:30.325Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Leo\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-02-18T05:40:30.326Z] CLI Version:   3.17.4
+[debug] [2018-02-18T05:40:30.326Z] Platform:      win32
+[debug] [2018-02-18T05:40:30.326Z] Node Version:  v8.9.4
+[debug] [2018-02-18T05:40:30.326Z] Time:          Sun Feb 18 2018 02:40:30 GMT-0300 (Montevideo Standard Time)
+[debug] [2018-02-18T05:40:30.326Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-02-18T05:40:30.345Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-02-18T05:40:30.346Z] > authorizing via signed-in user
+[debug] [2018-02-18T05:40:30.347Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/towerdefense-creatartis  
+  
+ Sun Feb 18 2018 02:40:30 GMT-0300 (Montevideo Standard Time)
+[debug] [2018-02-18T05:40:33.539Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-18T05:40:33.540Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/towerdefense-creatartis/tokens  
+  
+ Sun Feb 18 2018 02:40:33 GMT-0300 (Montevideo Standard Time)
+[debug] [2018-02-18T05:40:34.539Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\Leo\Programming\GitHub\LeonardoVal\ludorum-towerdefense\apps\towerdefense-creatartis.firebaseapp.com'...
+[info] 
+[debug] [2018-02-18T05:40:34.541Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/towerdefense-creatartis  
+  
+ Sun Feb 18 2018 02:40:34 GMT-0300 (Montevideo Standard Time)
+[debug] [2018-02-18T05:40:35.984Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-18T05:40:35.985Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/608800770431/clients/_:getWebAppConfig  
+  
+ Sun Feb 18 2018 02:40:35 GMT-0300 (Montevideo Standard Time)
+[debug] [2018-02-18T05:40:37.634Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+

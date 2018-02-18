@@ -2,22 +2,28 @@
 <html><head>
 	<title>Console: ludorum-towerdefense.</title>
 	<meta charset="UTF-8"/>
-	<script src="lib/require.js"></script>
+	<style>
+body { font-family: "Merriweather", "PT Serif", Georgia, "Times New Roman", serif; }
+h1 { text-align: center; }
+a { color: black; text-decoration: none; }
+#reference tr td { padding: 0.5em; }
+#reference tr td:nth-child(1) { font-family: "Courier New", Courier, monospace; background-color: black; color: white; }
+#reference tr td:nth-child(1) a { color: white; }
+	</style>
+	<script src="../node_modules/requirejs/require.js"></script>
 </head><body onload="main();">
+	<h1><a href="http://github.com/LeonardoVal/ludorum-towerdefense" target="_blank">ludorum-towerdefense</a> tester</h1>
+	<p>Open your browser Javascript console. In Windows use: Ctrl+Shift+J in Chrome, Ctrl+Shift+K in Firefox, F12 in Internet Explorer, Ctrl+Shift+I in Opera.</p>
 	<script type="text/javascript">
-function main() {
-	require.config({ baseUrl: 'lib/' });
-	require(['creatartis-base', 'sermat', 'ludorum', 'ludorum-towerdefense'], function (base, Sermat, ludorum, ludorum_towerdefense) {
-		window.base = base;
-		window.Sermat = Sermat;
-		window.ludorum = ludorum;
-		window.ludorum_towerdefense = ludorum_towerdefense;
-		(function (s){ // See: <http://jsconsole.com>.
-			s.src = 'lib/jsconsole/inject.js';
-			document.body.appendChild(s);
-		})(document.createElement('script'));
-	}, function (error) {
-		throw error;
+function main() { "use strict";
+	console.log("Initializing...");
+	require(['require-config'], function (init) {
+		init(['creatartis-base', 'sermat', 'inveniemus', 'ludorum-towerdefense'], function (base, Sermat, inveniemus, ludorum_towerdefense) {
+			window.base = base;
+			window.Sermat = Sermat;
+			window.inveniemus = inveniemus;
+			window.ludorum_towerdefense = ludorum_towerdefense;
+		});
 	});
 }
 	</script>
