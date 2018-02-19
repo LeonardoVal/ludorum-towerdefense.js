@@ -466,7 +466,8 @@ var CanvasView = exports.CanvasView = View.extend({
 				img.addEventListener('load', function () {
 					loadedCount++;
 					if (progress) {
-						progress({ 
+						progress({
+							name: 'images',
 							recent: id,
 							total: totalCount,
 							progress: loadedCount / totalCount
@@ -493,7 +494,8 @@ var CanvasView = exports.CanvasView = View.extend({
 				sound.addEventListener('loadedmetadata', function() {
 					loadedCount++;
 					if (progress) {
-						progress({ 
+						progress({
+							name: 'sounds',
 							recent: id,
 							total: totalCount,
 							progress: loadedCount / totalCount

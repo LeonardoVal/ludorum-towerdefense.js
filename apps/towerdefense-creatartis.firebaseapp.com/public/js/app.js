@@ -1,6 +1,6 @@
 /* jshint esversion:6 */
 document.addEventListener('DOMContentLoaded', function () { "use strict";
-	var APP = {
+	var APP = window.APP = {
 		ELEMS: {
 			canvas: document.querySelector("#game"),
 			towerPanel: document.querySelector("#towers"),
@@ -21,26 +21,6 @@ document.addEventListener('DOMContentLoaded', function () { "use strict";
 		}
 	}
 
-	function loadImages() {
-		return Promise.all(base.iterable().mapApply(function (id, path) {
-			return new Promise(function (resolve, reject) {
-				var img = new Image();
-				img.addEventListener('error', function () {
-					reject(new Error('Loading image '+ id +' ('+ path +') failed!'));
-				}, false);
-				img.addEventListener('load', function () {
-					resolve([id, img]);
-				}, false);
-				img.src = path;
-			});
-		}).toArray()).then(function (imgs) {
-			APP.images = base.iterable(imgs).toObject();
-			return APP.images;
-		});
-	}
-
-
-
 	function main(user) { /////////////////////////////////////////////////////////////////////////
 		console.log('Loading libraries using RequireJS ...');
 		return new Promise(function (resolve, reject) {
@@ -56,29 +36,24 @@ document.addEventListener('DOMContentLoaded', function () { "use strict";
 
 //BEGIN Old code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function EndGame(stage, level, hitpoints) {
-	var record = {
-		date: Date.now(),
-		user: window.USER,
-		stage: stage,
-		level: level,
-		hitpoints: hitpoints,
-		end: true
-	};
-	firebase.database().ref("matches/towerdefense").push(record);
-   }
-   
-   function EndWave(stage, level, player) {
-	var record = {
-			date: Date.now(),
-			user: window.USER,
-			stage: stage,
-			level: level,
-			hitpoints: player.hitpoints,
-			money: player.money
-		};
-	console.log("End wave!", record);
-	firebase.database().ref("matches/towerdefense").push(record);
-   }
+	firebase.database().ref("matches/towerdefense").push(APP.record);
+}
+
+function EndWave(stage, level, player) {
+	var towers = APP.logic.maze.turrets.map(function (coord) {
+		var t = '',
+			ts = APP.logic.towers;
+		for (var i = 0; i < ts.length; i++) {
+			if (ts[i].mazeCoordinates.x === coord.x && ts[i].mazeCoordinates.y === coord.y) {
+				t = ts[i].constructor.sprite;
+				break;
+			}
+		}
+		return t;
+	});
+	APP.record.levels.push({ level: level, hitpoints: player.hitpoints, money: player.money, 
+		towers: towers });
+}
 
 var constants = ludorum_towerdefense.constants,
     events = ludorum_towerdefense.events,
@@ -397,6 +372,12 @@ var constants = ludorum_towerdefense.constants,
 					APP.view.showGrid = false;
 					document.querySelector("#frame").classList.remove("hidden");
 					document.querySelector("#wait").classList.add("hidden");
+					APP.record = {
+						date: Date.now(),
+						user: window.USER,
+						stage: stagePrompt,
+						levels: []
+					};
 					APP.logic.start();
 				});
 //END Old code ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
