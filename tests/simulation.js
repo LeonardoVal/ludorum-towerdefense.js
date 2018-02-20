@@ -7,14 +7,18 @@ require('source-map-support').install();
 */
 var path = require('path'),
 	base = require('creatartis-base'),
+	inveniemus = require('inveniemus'),
 	capataz = require('capataz'),
-	//ludorum_towerdefense = require('./lib/ludorum-towerdefense'),
+	ludorum_towerdefense = require('../build/ludorum-towerdefense'),
 
 	server = capataz.Capataz.run({
 		port: 8088,
 		workerCount: 4,
 		desiredEvaluationTime: 30000, // 30 seconds.
-		customFiles: path.dirname(module.filename) + '/lib',
+		customFiles: [
+			{ module: ludorum_towerdefense },
+			{ module: inveniemus }
+		],
 		logFile: base.Text.formatDate(null, '"./tests/logs/simulation-"yyyymmdd-hhnnss".txt"'),
 		maxDelay: 10000,
 		maxRetries: 1000
