@@ -7,7 +7,6 @@ require('source-map-support').install();
 */
 var path = require('path'),
 	base = require('creatartis-base'),
-	Sermat = require('sermat'),
 	inveniemus = require('inveniemus'),
 	capataz = require('capataz'),
 	ludorum_towerdefense = require('../build/ludorum-towerdefense'),
@@ -48,7 +47,7 @@ var jobFunction = function (ludorum_towerdefense, scenario, size, steps) {
 // ## Main #########################################################################################
 
 var SCENARIOS = ['Test01', 'Test02', 'Test03'],
-	MATCH_COUNT = 2,//50,
+	MATCH_COUNT = 50,
 	AI_SIZES = [10, 15, 20],
 	AI_STEPS = 5,
 	STATS = new base.Statistics();
