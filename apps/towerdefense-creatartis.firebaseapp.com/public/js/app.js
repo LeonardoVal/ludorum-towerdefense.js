@@ -1,6 +1,7 @@
 /* jshint esversion:6 */
 document.addEventListener('DOMContentLoaded', function () { "use strict";
 	var APP = window.APP = {
+		visual: true,
 		ELEMS: {
 			canvas: document.querySelector("#game"),
 			towerPanel: document.querySelector("#towers"),
@@ -35,24 +36,54 @@ document.addEventListener('DOMContentLoaded', function () { "use strict";
 				console.log('Loaded: base, Sermat, inveniemus, ludorum_towerdefense.');
 
 //BEGIN Old code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function EndGame(stage, level, hitpoints) {
-	firebase.database().ref("matches/towerdefense").push(APP.record);
+function startGame() {
+	var first = !APP.logic,
+		stage = 0;
+	while (stage !== 1 && stage !== 2 && stage !== 3) {
+		stage = +prompt("Ingrese el número del escenario", "1");
+	}
+	APP.stage = APP.STAGES[stage - 1];
+	APP.logic = APP.stage.game().__logic__(APP.visual ? APP.view
+		: new ludorum_towerdefense.View(canvas.width, canvas.height)
+	);
+	APP.nivelActual = 1;
+	APP.record = {
+		date: Date.now(),
+		user: window.USER,
+		game: APP.logic.gameId,
+		levels: []
+	};
+	if (first) {
+		addTowers();
+		addHandlers();
+	}
+	startWaveButton.disabled = false;
+	APP.logic.triggerEvent(events.moneyChanged, APP.logic.player);
+	APP.logic.triggerEvent(events.healthChanged, APP.logic.player);
+	addUnitInfo();
+	APP.logic.start();
 }
 
-function EndWave(stage, level, player) {
-	var towers = APP.logic.maze.turrets.map(function (coord) {
-		var t = '',
-			ts = APP.logic.towers;
-		for (var i = 0; i < ts.length; i++) {
-			if (ts[i].mazeCoordinates.x === coord.x && ts[i].mazeCoordinates.y === coord.y) {
-				t = ts[i].constructor.sprite;
-				break;
-			}
-		}
-		return t;
+function EndGame() {
+	firebase.database().ref("matches/towerdefense").push(APP.record);
+	//TODO APP.STAGES.push(APP.STAGES.shift());
+	//TODO startGame();
+}
+
+function EndWave(level, player) {
+	var towers = APP.logic.towers.map(function (tower) {
+			return { 
+				x: tower.mazeCoordinates.x, 
+				y: tower.mazeCoordinates.y, 
+				sprite: tower.constructor.sprite
+			};
+		});
+	APP.record.levels.push({ 
+		level: level,
+		hitpoints: player.hitpoints, 
+		money: player.money, 
+		towers: towers 
 	});
-	APP.record.levels.push({ level: level, hitpoints: player.hitpoints, money: player.money, 
-		towers: towers });
 }
 
 var constants = ludorum_towerdefense.constants,
@@ -62,9 +93,8 @@ var constants = ludorum_towerdefense.constants,
     types = ludorum_towerdefense.types,
     Sound = ludorum_towerdefense.Sound,
     TowerDefense = ludorum_towerdefense.TowerDefense;
-  var stagePrompt = prompt("Ingrese el número del escenario", "1");
+  //var stagePrompt = prompt("Ingrese el número del escenario", "1");
   var towerButtons = [];
-  var nivelActual = 1;
   var towerType = undefined;
 //FIXME
   var canvas = document.querySelector("#game");
@@ -83,113 +113,97 @@ var constants = ludorum_towerdefense.constants,
   var speedy = document.querySelector("#Speedy-info");
   var armo = document.querySelector("#Armos-info");
 
-  var getMousePosition = function(evt) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-      x: evt.clientX - rect.left,
-      y: evt.clientY - rect.top
-    };
-  };
+ 		var addHandlers = function () {
+			var timeInfo = document.querySelector("#time-info"),
+				moneyInfo = document.querySelector("#money-info"),
+				levelInfo = document.querySelector("#level-info"),
+				healthInfo = document.querySelector("#health-info"),
+				startWaveButton = document.querySelector("#startWave");
+			function getMousePosition(evt) {
+				var rect = canvas.getBoundingClientRect();
+				return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+			}
 
-  var addHandlers = function() {
-    APP.logic.addEventListener(events.waveFinished, function() {
-      timeInfo.textContent = "Ya salieron todas!";
-    });
-    APP.logic.addEventListener(events.waveDefeated, function(player) {
-      EndWave(stagePrompt, nivelActual, player);
-      if (nivelActual == 10) {
-        window.alert("¡FELICITACIONES! ¡GANASTE!");
-        EndGame(stagePrompt, nivelActual, player.hitpoints);
-      } else {
-        nivelActual += 1;
-        levelInfo.textContent = nivelActual;
-      }
-      addUnitInfo();
-      timeInfo.textContent = "Preparate para el nivel " + nivelActual;
-      startWaveButton.disabled = false;
-    });
-    APP.logic.addEventListener(events.playerDefeated, function(player) {
-      window.alert("Perdiste");
-      EndGame(stagePrompt, nivelActual, player.hitpoints);
-      timeInfo.textContent = "Game over ...";
-    });
-    APP.logic.addEventListener(events.waveCreated, function(wave) {
-      timeInfo.textContent = "Faltan salir" + wave.units.length + " unidades";
-      startWaveButton.disabled = true;
-    });
-    APP.logic.addEventListener(events.unitSpawned, function(remaining) {
-      timeInfo.textContent = remaining + " unidades";
-    });
-    APP.logic.addEventListener(events.moneyChanged, function(player) {
-      moneyInfo.textContent = player.money;
-    });
-    APP.logic.addEventListener(events.healthChanged, function(player) {
-      healthInfo.textContent = player.hitpoints;
-    });
-    startWaveButton.addEventListener(events.click, function() {
-      APP.logic.beginWave();
-    });
-    soundInfo.addEventListener(events.click, function() {
-      var on = "on";
-      var off = "off";
-      var status = this.classList.contains("on");
-      this.classList.remove(status ? on : off);
-      this.classList.add(status ? off : on);
-      Sound.setVolume(status ? 0 : 1);
-    });
-    canvas.addEventListener(events.click, function(evt) {
-      var mousePos = getMousePosition(evt);
-      var pos = APP.logic.transformCoordinates(mousePos.x, mousePos.y);
-      evt.preventDefault();
-
-      if (towerType) APP.logic.buildTower(pos, towerType);
-      else APP.logic.destroyTower(pos);
-    });
-    canvas.addEventListener(events.contextmenu, function(evt) {
-      var mousePos = getMousePosition(evt);
-      var pos = APP.logic.transformCoordinates(mousePos.x, mousePos.y);
-      evt.preventDefault();
-      APP.logic.destroyTower(pos);
-    });
-    canvas.addEventListener(events.mouseover, function(evt) {
-      APP.view.showGrid = true;
-    });
-    canvas.addEventListener(events.mouseout, function(evt) {
-      APP.view.showGrid = false;
-    });
-  };
+			APP.logic.addEventListener(events.waveFinished, function() {
+      			timeInfo.textContent = "Ya salieron todas!";
+			});
+			APP.logic.addEventListener(events.waveDefeated, function(player) {
+      			EndWave(APP.nivelActual, player);
+				if (APP.nivelActual == APP.logic.waves.waves.length) {
+					window.alert("¡FELICITACIONES! ¡GANASTE!");
+					EndGame();
+				} else {
+					APP.nivelActual += 1;
+					levelInfo.textContent = APP.nivelActual;
+				}
+				addUnitInfo();
+				timeInfo.textContent = "Preparate para el nivel " + APP.nivelActual;
+				startWaveButton.disabled = false;
+			});
+			APP.logic.addEventListener(events.playerDefeated, function(player) {
+				window.alert("Perdiste");
+				EndGame();
+				timeInfo.textContent = "Game over ...";
+			});
+			APP.logic.addEventListener(events.waveCreated, function(wave) {
+				timeInfo.textContent = "Faltan salir" + wave.units.length + " unidades";
+				startWaveButton.disabled = true;
+			});
+			APP.logic.addEventListener(events.unitSpawned, function(remaining) {
+				timeInfo.textContent = remaining + " unidades";
+			});
+			APP.logic.addEventListener(events.moneyChanged, function(player) {
+				moneyInfo.textContent = player.money;
+			});
+			APP.logic.addEventListener(events.healthChanged, function(player) {
+				healthInfo.textContent = player.hitpoints;
+			});
+			startWaveButton.addEventListener(events.click, function() {
+				APP.logic.beginWave();
+			});
+			soundInfo.addEventListener(events.click, function() {
+				var status = this.classList.contains("on");
+				this.classList.remove(status ? 'on' : 'off');
+				this.classList.add(status ? 'off' : 'on');
+				Sound.setVolume(status ? 0 : 1);
+			});
+			canvas.addEventListener(events.click, function(evt) {
+				var mousePos = getMousePosition(evt);
+				var pos = APP.logic.transformCoordinates(mousePos.x, mousePos.y);
+				evt.preventDefault();
+				if (towerType) {
+					APP.logic.buildTower(pos, towerType);
+				} else {
+					APP.logic.destroyTower(pos);
+				}
+			});
+			canvas.addEventListener(events.contextmenu, function(evt) {
+				var mousePos = getMousePosition(evt);
+				var pos = APP.logic.transformCoordinates(mousePos.x, mousePos.y);
+				evt.preventDefault();
+				APP.logic.destroyTower(pos);
+			});
+			canvas.addEventListener(events.mouseover, function(evt) {
+				APP.view.showGrid = true;
+			});
+			canvas.addEventListener(events.mouseout, function(evt) {
+				APP.view.showGrid = false;
+			});
+		};
 
   var addTower = function(tower) {
-    levelInfo.textContent = nivelActual;
     var img = APP.view.images[tower.sprite];
 
     var div = document.createElement("div");
-    div.innerHTML = [
-      '<div class=preview><div style="background: url(',
-      img.src,
-      ") no-repeat; width: ",
-      ~~(img.naturalWidth / tower.frames),
-      "px; height: ",
-      img.naturalHeight,
-      'px" class="preview-image"></div></div>',
-      "<div class=title>",
-      tower.nickName,
-      "</div><div class=info>",
-      "<div class=description>",
-      tower.description,
-      "</div>",
-      "<div class=speed>",
-      tower.speed,
-      "</div>",
-      "<div class=damage>",
-      tower.shotType.damage,
-      "</div>",
-      "<div class=range>",
-      tower.range,
-      "</div>",
-      "<div class=cost>",
-      tower.cost,
-      "</div></div>"
+    div.innerHTML = ['<div class=preview><div style="background: url(', img.src,
+      ") no-repeat; width: ", ~~(img.naturalWidth / tower.frames), "px; height: ",
+      img.naturalHeight, 'px" class="preview-image"></div></div>',
+      "<div class=title>", tower.nickName, "</div><div class=info>",
+      "<div class=description>", tower.description, "</div>",
+      "<div class=speed>", tower.speed, "</div>",
+      "<div class=damage>", tower.shotType.damage, "</div>",
+      "<div class=range>", tower.range, "</div>",
+      "<div class=cost>", tower.cost, "</div></div>"
     ].join("");
     towerButtons.push(div);
     div.addEventListener(events.click, function() {
@@ -202,123 +216,40 @@ var constants = ludorum_towerdefense.constants,
     });
     towerPanel.appendChild(div);
   };
-  var addTowers = function() {
-    addUnitInfo(1);
-    for (var key in types.towers) addTower(types.towers[key]);
-  };
-  var addUnitInfo = function(level) {
-    if (level === 0) {
-      level = 0;
-    } else {
-      level = nivelActual;
-    }
-    if (level <= 10) {
-      nextWave.innerHTML = "";
-      var wave0 = APP.logic.waves.waves[level - 1].units;
+				var addTowers = function() {
+					for (var key in types.towers) {
+						addTower(types.towers[key]);
+					}
+				};
+				var addUnitInfo = function() {
+					var level = APP.nivelActual;
+					levelInfo.textContent = level;
+					if (level < APP.logic.waves.waves.length) {
+						var unitCounts = { Mario: 0, Rope: 0, FireWizzrobe: 0, DarkNut: 0, 
+							Speedy: 0, Armos: 0
+						};
+						APP.logic.waves.waves[level - 1].units.forEach(function (u) {
+							unitCounts[u.unit]++;
+						});
 
-      var cantmarios = 0;
-      var cantropes = 0;
-      var cantfirewizzrobes = 0;
-      var cantdarknuts = 0;
-      var cantspeedies = 0;
-      var cantarmos = 0;
-      for (var i = 0; i < wave0.length; i++) {
-        if (wave0[i].unit == "Mario") cantmarios += 1;
+						document.querySelector('#nextWave p').innerHTML = 'Level '+ level;
+						base.iterable(unitCounts).forEachApply(function (unit, count) {
+							document.querySelector('#'+ unit +'-info .title').innerHTML = count;
+						});
+					}
+				};
 
-        if (wave0[i].unit == "Rope") cantropes += 1;
-
-        if (wave0[i].unit == "FireWizzrobe") cantfirewizzrobes += 1;
-
-        if (wave0[i].unit == "DarkNut") cantdarknuts += 1;
-
-        if (wave0[i].unit == "Speedy") cantspeedies += 1;
-
-        if (wave0[i].unit == "Armos") cantarmos += 1;
-      }
-
-      var divM = document.createElement("div");
-      divM.innerHTML = [
-        "<p>Level: ",
-        level,
-        "</p>",
-        '<div class=preview><div style="background: url(',
-        "assets/icons/mario.png",
-        ') no-repeat; width: 30px; height: 32px" class="preview-image"></div></div>',
-        "<div class=title>",
-        cantmarios,
-        "</div><div class=info>"
-      ].join("");
-      nextWave.appendChild(divM);
-
-      var divR = document.createElement("div");
-      divR.innerHTML = [
-        '<div class=preview><div style="background: url(',
-        "assets/icons/rope.png",
-        ') no-repeat; width: 21px; height: 18px" class="preview-image"></div></div>',
-        "<div class=title>",
-        cantropes,
-        "</div><div class=info>"
-      ].join("");
-      nextWave.appendChild(divR);
-
-      var divF = document.createElement("div");
-      divF.innerHTML = [
-        '<div class=preview><div style="background: url(',
-        "assets/icons/firewizzrobe.png",
-        ') no-repeat; width: 22px; height: 34px" class="preview-image"></div></div>',
-        "<div class=title>",
-        cantfirewizzrobes,
-        "</div><div class=info>"
-      ].join("");
-      nextWave.appendChild(divF);
-
-      var divD = document.createElement("div");
-      divD.innerHTML = [
-        '<div class=preview><div style="background: url(',
-        "assets/icons/darknut.png",
-        ') no-repeat; width: 31px; height: 31px" class="preview-image"></div></div>',
-        "<div class=title>",
-        cantdarknuts,
-        "</div><div class=info>"
-      ].join("");
-      nextWave.appendChild(divD);
-
-      var divS = document.createElement("div");
-      divS.innerHTML = [
-        '<div class=preview><div style="background: url(',
-        "assets/icons/speedy.png",
-        ') no-repeat; width: 29px; height: 29px" class="preview-image"></div></div>',
-        "<div class=title>",
-        cantspeedies,
-        "</div><div class=info>"
-      ].join("");
-      nextWave.appendChild(divS);
-
-      var divA = document.createElement("div");
-      divA.innerHTML = [
-        '<div class=preview><div style="background: url(',
-        "assets/icons/armos.png",
-        ') no-repeat; width: 34px; height: 34px" class="preview-image"></div></div>',
-        "<div class=title>",
-        cantarmos,
-        "</div><div class=info>"
-      ].join("");
-      nextWave.appendChild(divA);
-    }
-  };
-
-				APP.visual = true;
 				APP.view = new CanvasView(APP.ELEMS.canvas);
-				APP.stage = {
-						1: ludorum_towerdefense.scenarios.Test01,
-						2: ludorum_towerdefense.scenarios.Test02,
-						3: ludorum_towerdefense.scenarios.Test03,
-						4: ludorum_towerdefense.scenarios.Test04
-					}[stagePrompt || "1"];
-				APP.logic = APP.stage.game().__logic__(APP.visual 
-					? APP.view 
-					: new ludorum_towerdefense.View(canvas.width, canvas.height)
-				);
+				/*TODO APP.STAGES = base.Randomness.shuffle([
+						ludorum_towerdefense.scenarios.Test01,
+						ludorum_towerdefense.scenarios.Test02,
+						ludorum_towerdefense.scenarios.Test03
+					]);*/
+				APP.STAGES = [
+					ludorum_towerdefense.scenarios.Test01,
+					ludorum_towerdefense.scenarios.Test02,
+					ludorum_towerdefense.scenarios.Test03
+				];
 				APP.view.loadResources(
 					{ // Images
 						background:   "assets/background.png",
@@ -366,19 +297,11 @@ var constants = ludorum_towerdefense.constants,
 							~~(e.progress * 100) +"%)";
 					}
 				).then(function completed(e) {
-					addTowers();
-					addHandlers();
 					APP.view.background = APP.view.images["background"];
 					APP.view.showGrid = false;
 					document.querySelector("#frame").classList.remove("hidden");
 					document.querySelector("#wait").classList.add("hidden");
-					APP.record = {
-						date: Date.now(),
-						user: window.USER,
-						stage: stagePrompt,
-						levels: []
-					};
-					APP.logic.start();
+					startGame();
 				});
 //END Old code ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -399,7 +322,7 @@ var constants = ludorum_towerdefense.constants,
 				window.USER = result.user.email;
 				return main();
 			} else { // User is not logged.
-				//FIXME FOOTER.innerHTML = "Checking user's login...";
+				APP.ELEMS.waitMessage.innerHTML = "Checking user's login...";
 				var provider = new firebase.auth.GoogleAuthProvider(),
 					auth = firebase.auth();
 				auth.useDeviceLanguage();
@@ -407,10 +330,10 @@ var constants = ludorum_towerdefense.constants,
 			}
 		}).catch(function(err) {
 			console.log(err);
-			//FIXME FOOTER.innerHTML = "User authentication failed!";
+			APP.ELEMS.waitMessage.innerHTML = "User authentication failed!";
 		});
 	} catch (err) {
 		console.error(err);
-		//FIXME FOOTER.innerHTML = "Application initialization failed!";
+		APP.ELEMS.waitMessage.innerHTML = "Application initialization failed!";
 	}
 }); // 'DOMContentLoaded'

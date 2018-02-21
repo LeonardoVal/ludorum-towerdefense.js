@@ -15,12 +15,43 @@
 		<div id="wait-message">Loading ...</div>
 	</div>
 	<div id="nextWave" style="position:absolute; padding:20px;">
-		<div id="Mario-info"></div>
-		<div id="Rope-info"></div>
-		<div id="FireWizzrobe-info"></div>
-		<div id="DarkNut-info"></div>
-		<div id="Speedy-info"></div>
-		<div id="Armos-info"></div>
+		<p>Level ?</p>
+		<div id="Mario-info">
+			<div class=preview>
+				<div style="background: url(assets/icons/mario.png) no-repeat; width: 30px; height: 32px" class="preview-image"></div>
+			</div>
+			<div class=title>?</div>
+		</div>
+		<div id="Rope-info">
+			<div class=preview>
+				<div style="background: url(assets/icons/rope.png) no-repeat; width: 21px; height: 18px" class="preview-image"></div>
+			</div>
+			<div class=title>?</div>
+		</div>
+		<div id="FireWizzrobe-info">
+			<div class=preview>
+				<div style="background: url(assets/icons/firewizzrobe.png) no-repeat; width: 22px; height: 34px" class="preview-image"></div>
+			</div>
+			<div class=title>?</div>
+		</div>
+		<div id="DarkNut-info">
+			<div class=preview>
+				<div style="background: url(assets/icons/darknut.png) no-repeat; width: 31px; height: 31px" class="preview-image"></div>
+			</div>
+			<div class=title>?</div>
+		</div>
+		<div id="Speedy-info">
+			<div class=preview>
+				<div style="background: url(assets/icons/speedy.png) no-repeat; width: 29px; height: 29px" class="preview-image"></div>
+			</div>
+			<div class=title>?</div>
+		</div>
+		<div id="Armos-info">
+			<div class=preview>
+				<div style="background: url(assets/icons/armos.png) no-repeat; width: 34px; height: 34px" class="preview-image"></div>
+			</div>
+			<div class=title>?</div>
+		</div>
 	</div>
 	<div id="frame" class="hidden">
 		<div id="info">
@@ -33,7 +64,81 @@
 		<canvas id="game" width=450 height=450>
 			<p>Your browser does not support the canvas element. This indicates that you are really stuck in the past (sorry!). Please get a new browser.</p>
 		</canvas>
-		<div id="towers"></div>
+		<div id="towers"><!--
+			<div>
+				<div class="preview">
+					<div style="background: url(http://localhost:5000/assets/sprites/mgnest.png) no-repeat; width: 25px; height: 23px" class="preview-image"></div>
+				</div>
+				<div class="title">MG Nest</div>
+				<div class="info">
+					<div class="description">The MG Nest is cheap but powerful. It can help you a lot against low armored units.</div>
+					<div class="speed">4</div>
+					<div class="damage">2</div>
+					<div class="range">3</div>
+					<div class="cost">7</div>
+				</div>
+			</div><div>
+				<div class="preview">
+					<div style="background: url(http://localhost:5000/assets/sprites/canontower.png) no-repeat; width: 30px; height: 30px" class="preview-image"></div>
+				</div>
+				<div class="title">Canon</div>
+				<div class="info">
+					<div class="description">The backbone in war! It has an amazing range and shoots shells, however, the firing speed could be better.</div>
+					<div class="speed">1</div>
+					<div class="damage">15</div>
+					<div class="range">8</div>
+					<div class="cost">12</div>
+				</div>
+			</div><div>
+				<div class="preview">
+					<div style="background: url(http://localhost:5000/assets/sprites/flametower.png) no-repeat; width: 30px; height: 30px" class="preview-image"></div>
+				</div>
+				<div class="title">Flame tower</div>
+				<div class="info">
+					<div class="description">Burn them down but a bit faster ... Excellent for slow armored units, but fails against strong armored enemies.</div>
+					<div class="speed">6</div>
+					<div class="damage">8</div>
+					<div class="range">2</div>
+					<div class="cost">15</div>
+				</div>
+			</div><div>
+				<div class="preview">
+					<div style="background: url(http://localhost:5000/assets/sprites/icetower.png) no-repeat; width: 30px; height: 30px" class="preview-image"></div>
+				</div>
+				<div class="title">Ice-Tower</div>
+				<div class="info">
+					<div class="description">Cool. Slow shots, but with high efficiency. The right choice against slow strongly armored units.</div>
+					<div class="speed">2</div>
+					<div class="damage">15</div>
+					<div class="range">6</div>
+					<div class="cost">25</div>
+				</div>
+			</div><div>
+				<div class="preview">
+					<div style="background: url(http://localhost:5000/assets/sprites/lasertower.png) no-repeat; width: 24px; height: 34px" class="preview-image"></div>
+				</div>
+				<div class="title">Faser</div>
+				<div class="info">
+					<div class="description">Won't play with you, but does it with high efficiency. Really fast low damage shots.</div>
+					<div class="speed">3</div>
+					<div class="damage">7</div>
+					<div class="range">5</div>
+					<div class="cost">29</div>
+				</div>
+			</div><div>
+				<div class="preview">
+					<div style="background: url(http://localhost:5000/assets/sprites/gatetohell.png) no-repeat; width: 30px; height: 30px" class="preview-image"></div>
+				</div>
+				<div class="title">Hellgate</div>
+				<div class="info">
+					<div class="description">Paint rules! This is the ultimate weapon of war, but it will not kill high speed units.</div>
+					<div class="speed">1</div>
+					<div class="damage">300</div>
+					<div class="range">2</div>
+					<div class="cost">55</div>
+				</div>
+			</div> -->
+		</div>
 		<div id="buttons">
 			<button id="startWave">Start Wave</button>
 		</div>
