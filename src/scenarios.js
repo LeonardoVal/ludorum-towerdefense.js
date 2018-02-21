@@ -5,7 +5,8 @@ var scenarios = exports.scenarios = {
 
 	/** Simple test game. 01
 	*/
-	Test01: new (TowerDefense.Definition)({
+	Test01: new (TowerDefense.Definition)({ 
+		gameId: 'Test01',
 		mapWidth: 8,
 		mapHeight: 8,
 		creepPath: [
@@ -54,6 +55,7 @@ var scenarios = exports.scenarios = {
 	/** Simple test game. 02
 	*/
 	Test02: new (TowerDefense.Definition)({
+		gameId: 'Test02',
 		mapWidth: 8,
 		mapHeight: 8,
 		creepPath: [
@@ -103,6 +105,7 @@ var scenarios = exports.scenarios = {
 	/** Simple test game. 03
 	*/
 	Test03: new (TowerDefense.Definition)({
+		gameId: 'Test03',
 		mapWidth: 8,
 		mapHeight: 8,
 		creepPath: [
@@ -144,6 +147,6 @@ var scenarios = exports.scenarios = {
 		],
 		startMoney: 14,
 		startHP: 10
-	}) // Test03 y 04
+	}) // Test03 y Test04
 
 }; // scenarios

@@ -8,10 +8,15 @@ var TowerDefense = exports.TowerDefense = declare({
 	state.
 	*/
 	'static Definition': declare({
+		/** The following properties belong to the game definition: 
+		 */
 		constructor: function TowerDefense$Definition(params) {
+			
 			base.initialize(this, params)
-				/** The following properties belong to the game definition: 
-					+ `mapHeight`: the number of rows of the map.
+				/** + `name`: name of the stage.
+				*/
+				.string('gameId', { ignore: true })
+				/** + `mapHeight`: the number of rows of the map.
 				*/
 				.integer('mapHeight', { ignore: true })
 				/** + `mapWidth`: the number of columns of the map.
@@ -115,6 +120,7 @@ var TowerDefense = exports.TowerDefense = declare({
 		var maze = this.def.__maze__(),
 			waveList = this.def.__waveList__(),
 			logic = new GameLogic(view, maze);
+		logic.gameId = this.def.gameId;
 		logic.state = GameState.building;
 		logic.player.money = 999; // FIXME
 		this.towers.forEach(function (TowerType, i) {
@@ -153,27 +159,9 @@ var TowerDefense = exports.TowerDefense = declare({
 	next: function next(move) {
 		var that = this,
 			logic = this.__logic__();
-		// console.log(logic.towers.map(function (t) {
-			// return t ? t.constructor.nickName +'@'+ JSON.stringify(t.mazeCoordinates) : '';
-		// })); //FIXME
 
-/*		console.log("MOVIMIENTO--->");
-		console.log('move[0] = '+(move[0] && move[0].nickName));
-		console.log('move[1] = '+(move[1] && move[1].nickName));
-		console.log('move[2] = '+(move[2] && move[2].nickName));
-		console.log("<---MOVIMIENTO");
-
-		console.log("ESTADO PREVIO--->");
-		console.log('logic.towers[0] = '+ (logic.towers[0] && logic.towers[0].constructor.nickName));
-		console.log('logic.towers[1] = '+ (logic.towers[1] && logic.towers[1].constructor.nickName));
-		console.log('logic.towers[2] = '+ (logic.towers[2] && logic.towers[2].constructor.nickName));
-		console.log("<---ESTADO PREVIO");
-
-		console.log("Guita inicial: "+logic.player.money);
-		*/
 		for (var i = 0; i < move.length; i++) { // Sell missing or modified turrets.
 			if (move[i] !== this.towers[i] && this.towers[i]) {
-//				console.log('Vendí ' + logic.maze.turrets[i].nickName);
 				logic.destroyTower(logic.maze.turrets[i]);
 				
 			}
@@ -181,18 +169,9 @@ var TowerDefense = exports.TowerDefense = declare({
 		for (i = 0; i < move.length; i++) { // Buy new turrets.
 			if (move[i] && move[i] !== this.towers[i] && move[i].cost <= logic.player.money) {
 				logic.buildTower(logic.maze.turrets[i], move[i]);
-//				console.log('Compré ' + move[i].nickName);
 			}
 		}
-		/*
-		console.log("Guita final: "+logic.player.money);
 
-		console.log('ESTADO FINAL--->');
-		console.log('logic.towers[0] = '+ (logic.towers[0] && logic.towers[0].constructor.nickName));
-		console.log('logic.towers[1] = '+ (logic.towers[1] && logic.towers[1].constructor.nickName));
-		console.log('logic.towers[2] = '+ (logic.towers[2] && logic.towers[2].constructor.nickName));
-		console.log('<---ESTADO FINAL');
-*/
 		var future = new base.Future();
 		logic.addEventListener(events.playerDefeated, function () {
 			future.resolve(logic);
