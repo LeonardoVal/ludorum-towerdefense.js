@@ -66,11 +66,12 @@ document.addEventListener('DOMContentLoaded', function () {
 					}
 
 					function EndGame(level, player) {
-						EndWave(level, player);
-						firebase.database().ref("matches/towerdefense").push(APP.record);
+						if (!APP.finished) {
+							firebase.database().ref("matches/towerdefense").push(APP.record);
+							APP.finished = true;
+						}
 						//TODO APP.STAGES.push(APP.STAGES.shift());
 						//TODO startGame();
-
 					}
 
 					function EndWave(level, player) {
@@ -133,8 +134,8 @@ document.addEventListener('DOMContentLoaded', function () {
 						APP.logic.addEventListener(events.waveDefeated, function (player) {
 							EndWave(APP.nivelActual, player);
 							if (APP.nivelActual == APP.logic.waves.waves.length) {
-								window.alert("¡FELICITACIONES! ¡GANASTE!");
 								EndGame(APP.nivelActual, player);
+								window.alert("¡FELICITACIONES! ¡GANASTE!");
 							} else {
 								APP.nivelActual += 1;
 								levelInfo.textContent = APP.nivelActual;
@@ -144,9 +145,10 @@ document.addEventListener('DOMContentLoaded', function () {
 							startWaveButton.disabled = false;
 						});
 						APP.logic.addEventListener(events.playerDefeated, function (player) {
-							window.alert("Perdiste");
+							EndWave(APP.nivelActual, player);
 							EndGame(APP.nivelActual, player);
 							timeInfo.textContent = "Game over ...";
+							window.alert("Perdiste");
 						});
 						APP.logic.addEventListener(events.waveCreated, function (wave) {
 							timeInfo.textContent = "Faltan salir" + wave.units.length + " unidades";
