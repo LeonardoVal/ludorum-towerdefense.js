@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 		}
 	});
 
-	require('creatartis-grunt').config(grunt, {
+	require('@creatartis/creatartis-grunt').config(grunt, {
 		sourceNames: ["__prologue__",
 			"manifest", "oop", "path", "video", "sound", "main", "logic",
 			"units", "shots", "towers", "towerdefense", "ai-players", "scenarios",

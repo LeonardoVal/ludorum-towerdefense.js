@@ -29,7 +29,7 @@
 	},
 	"devDependencies": {
 		"capataz": "0.1.7-beta",
-		"creatartis-grunt": "~0.0.15"
+		"@creatartis/creatartis-grunt": "~0.0.16-alpha"
 	},
 	"scripts": {}
 }
